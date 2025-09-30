@@ -43,11 +43,11 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                support@investhub.com
+                support@WealthForge.com
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                +1 (555) 123-4567
+                +1 (641) 2092930
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4" />
@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© 2025 InvestHub. All rights reserved.</p>
+          <p>© 2025 WealthForge. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-primary transition-smooth">Privacy Policy</a>
             <a href="#" className="hover:text-primary transition-smooth">Terms of Service</a>
