@@ -11,8 +11,8 @@ const investments = [
     title: "Stocks & ETFs",
     description: "Invest in top companies and diversified funds",
     icon: stocksIcon,
-    minInvestment: "$10",
-    avgReturn: "10-15%",
+    minInvestment: "$50",
+    avgReturn: "15-47%",
     risk: "Medium",
     color: "primary"
   },
@@ -21,8 +21,8 @@ const investments = [
     title: "Cryptocurrency",
     description: "Trade Bitcoin, Ethereum, and altcoins",
     icon: cryptoIcon,
-    minInvestment: "$5",
-    avgReturn: "15-25%",
+    minInvestment: "$100",
+    avgReturn: "15-59%",
     risk: "High",
     color: "accent"
   },
@@ -31,8 +31,8 @@ const investments = [
     title: "Real Estate",
     description: "Own fractional shares in premium properties",
     icon: realEstateIcon,
-    minInvestment: "$100",
-    avgReturn: "8-12%",
+    minInvestment: "$200",
+    avgReturn: "10-46%",
     risk: "Low",
     color: "secondary"
   },
