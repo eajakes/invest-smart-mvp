@@ -2,11 +2,65 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, TrendingUp } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+const signInSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signUpSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 const Auth = () => {
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  const signInForm = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const onSignIn = async (values: z.infer<typeof signInSchema>) => {
+    await signIn(values.email, values.password);
+  };
+
+  const onSignUp = async (values: z.infer<typeof signUpSchema>) => {
+    await signUp(values.email, values.password, values.firstName, values.lastName);
+  };
+
   return (
     <div className="min-h-screen gradient-hero">
       <Navbar />
@@ -36,54 +90,106 @@ const Auth = () => {
                   <CardTitle>Sign In</CardTitle>
                   <CardDescription>Enter your credentials to access your account</CardDescription>
                   
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="your@email.com" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" placeholder="••••••••" />
-                    </div>
-                    <Button type="submit" className="w-full" variant="gradient" size="lg">
-                      Sign In
-                    </Button>
-                  </form>
-                  
-                  <div className="text-center">
-                    <a href="#" className="text-sm text-primary hover:underline">
-                      Forgot your password?
-                    </a>
-                  </div>
+                  <Form {...signInForm}>
+                    <form onSubmit={signInForm.handleSubmit(onSignIn)} className="space-y-4">
+                      <FormField
+                        control={signInForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input type="email" placeholder="your@email.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={signInForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="••••••••" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full" variant="gradient" size="lg">
+                        Sign In
+                      </Button>
+                    </form>
+                  </Form>
                 </TabsContent>
                 
                 <TabsContent value="signup" className="space-y-4 mt-6">
                   <CardTitle>Create Account</CardTitle>
                   <CardDescription>Start your investment journey today</CardDescription>
                   
-                  <form className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" placeholder="John" />
+                  <Form {...signUpForm}>
+                    <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={signUpForm.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>First Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="John" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={signUpForm.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Last Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Doe" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" placeholder="Doe" />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signupEmail">Email</Label>
-                      <Input id="signupEmail" type="email" placeholder="your@email.com" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signupPassword">Password</Label>
-                      <Input id="signupPassword" type="password" placeholder="••••••••" />
-                    </div>
-                    <Button type="submit" className="w-full" variant="gradient" size="lg">
-                      Create Account
-                    </Button>
-                  </form>
+                      <FormField
+                        control={signUpForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input type="email" placeholder="your@email.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={signUpForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="••••••••" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full" variant="gradient" size="lg">
+                        Create Account
+                      </Button>
+                    </form>
+                  </Form>
                   
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50 text-xs">
                     <Shield className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
